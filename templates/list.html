@@ -1,6 +1,14 @@
 {% extends 'base.html' %}
-{% block title %} index {% endblock %}
+{% block title %} List {% endblock %}
 
 {% block content %}
-    {{page}}
+    <h1>POSTS</h1>
+    {% for post in posts %}
+        <a href="{{post.get_absolute_url}}">{{post.title}}</a> <br>
+        {{post.id}} <br>
+        {{post.content}} <br>
+        {{post.timestamp}} <br>
+        {{post.updated}}
+        <hr>
+    {% endfor %}
 {% endblock %}
