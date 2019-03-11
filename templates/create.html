@@ -1,12 +1,17 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 {% block title %} index page {% endblock %}
+{% block head_extra %}
+{{form.media}}
+{% endblock %}
 
 {% block content %}
 <h2>Form</h2>
-    <form action="" method="POST"> {% csrf_token %}
-    {{form.as_p}}
-    <input type="submit" value="Create">
+    <form action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+    {{form|crispy}}
+    <input type="submit" value="Create" class="btn btn-default">
     </form>
+
 {% endblock %}
 
 

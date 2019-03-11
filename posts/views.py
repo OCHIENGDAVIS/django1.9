@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, HttpResponseRedirect,redirect
 from django.contrib import messages
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from .models import Post
 from .forms import PostForm
 
@@ -13,10 +13,12 @@ def list(request):
     return render(request, 'list.html', context)
 
 def create(request):
-    form = PostForm(request.POST or None)
+    if not request.user.is_authenticated():
+        raise Http404
+    form = PostForm(request.POST or None, request.FILES or None)
     if form.is_valid():
-        print form.cleaned_data
         instance = form.save(commit=False)
+        instance.user = request.user
         instance.save()
         messages.success(request, 'Post created succesfully')
         return HttpResponseRedirect(instance.get_absolute_url())
@@ -35,7 +37,7 @@ def detail(request, id=id):
 
 def update(request, id=id):
     instance = get_object_or_404(Post, id=id)
-    form = PostForm(request.POST or None, instance=instance)
+    form = PostForm(request.POST or None,request.FILES or None, instance=instance)
     if form.is_valid():
         new_instance = form.save(commit=False)
         new_instance.save()
